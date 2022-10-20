@@ -1,6 +1,65 @@
+import { useEffect, useState } from 'react';
 import { Button, FormInput, Formlabel } from '../../components';
 
 export default function LoginForm() {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+  const [formErrors, setFormErrors] = useState({
+    email: '',
+    password: '',
+  });
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  const onFieldChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+
+    validateField(name, value);
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const validateField = (name, value) => {
+    const errors = { ...formErrors };
+    const error = '';
+
+    if (name === 'email') {
+      if(!value) {
+        error=" Email "
+      }
+      if (value.length < 2) {
+        error = 'Email cannot be less the 2 characters';
+      } else 
+    } else if (name === 'password') {
+      if (!value) {
+        error = 'Password is required';
+      }
+    }
+
+    if (error) {
+      errors[name] = error;
+    } else {
+      delete errors[name];
+    }
+
+    setFormErrors(errors);
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    console.log(formData);
+  };
+
+  useEffect(() => {
+    if (Object.keys(formErrors).length === 0) {
+      setIsFormValid(true);
+    } else {
+      setIsFormValid(false);
+    }
+  }, [formData]);
+
   return (
     <div className="mt-8 space-y-8 sm:mx-auto sm:w-full sm:max-w-md">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -15,7 +74,7 @@ export default function LoginForm() {
         </p>
       </div>
 
-      <form className="space-y-6" action="#" method="POST">
+      <form className="space-y-6" onSubmit={onSubmit}>
         <div>
           <Formlabel htmlFor="email">Email address</Formlabel>
           <div className="mt-2">
@@ -25,6 +84,7 @@ export default function LoginForm() {
               type="email"
               autoComplete="email"
               required
+              onChange={onFieldChange}
             />
           </div>
         </div>
@@ -38,6 +98,7 @@ export default function LoginForm() {
               type="password"
               autoComplete="current-password"
               required
+              onChange={onFieldChange}
             />
           </div>
         </div>
@@ -60,7 +121,7 @@ export default function LoginForm() {
         </div>
 
         <div>
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full" disabled={!isFormValid}>
             Sign in
           </Button>
         </div>
