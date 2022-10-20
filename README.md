@@ -58,15 +58,15 @@
 - roleId (PK)
 - name
 
-### features
+### permissions
 
 - featureId (PK)
 - name
 
-### roleFeatures
+### rolePermissions
 
-- roleId (PK)
-- featureId (PK)
+- roleId (FK)
+- featureId (FK)
 
 ### invites
 
@@ -96,16 +96,46 @@
 ### Authentication
 
 - `POST v1/auth/login`
+  - Description: 
+    - Login with email and password
+  - Request body:
+    ```
+    {
+      "email": "arontolentino@outlook.com",
+      "password": "password@1234",
+    }
+    ```
 - `POST v1/auth/register`
-- `GET v1/auth/invite/:inviteId`
-- `POST v1/auth/invite/:inviteId`
+  - Description: 
+    - Register with name, email, password, and business name.
+  - Query params:
+    - `inviteId`
+  - Request body:
+    ```
+    {
+      "name": "Aron Tolentino",
+      "email": "arontolentino@outlook.com",
+      "password": "password@1234",
+      "businessName: "John Doe Ventures Inc."
+    }
+    ```
+- `GET v1/auth/logout`
+  - Description:
+    - Log out by clearing cookies and delete refresh token from database
 
-### Team management
+### Users
 
-- `GET /v1/team-members`
-- `POST /v1/team-members`
-- `PUT /v1/team-members/:teamMemberId`
-- `DELETE /v1/team-members/:teamMemberId`
+- `GET /v1/users`
+  - Description: 
+    - Gets all users from a business
+  - Query params:
+    - `page`
+    - `pageSize`
+- `POST /v1/users`
+  - Description: 
+    - Invite a user to a business
+- `PUT /v1/users/:userId`
+- `DELETE /v1/users/:userId`
 
 ### Cards
 
