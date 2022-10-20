@@ -13,6 +13,19 @@ const createUser = async (reqBody, trx = null) => {
 };
 
 /**
+ * @dec Get user by id
+ * @param {uuid} userId
+ * @param {object} trx
+ * @returns {Promise<User>}
+ */
+const getUserById = async (userId, trx = null) => {
+  return User.query(trx)
+    .findById(userId)
+    .withGraphFetched('[role(defaultSelects).[permissions()]]')
+    .modify('defaultSelects');
+};
+
+/**
  * @dec Get user by email
  * @param {string} email
  * @param {object} trx
@@ -39,4 +52,4 @@ const queryUsers = async (reqQuery, trx = null) => {
   return users;
 };
 
-module.exports = { createUser, getUserByEmail, queryUsers };
+module.exports = { createUser, getUserByEmail, getUserById, queryUsers };

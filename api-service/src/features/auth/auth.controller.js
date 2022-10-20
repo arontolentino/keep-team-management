@@ -50,6 +50,12 @@ const register = catchAsync(async (req, res) => {
   });
 });
 
+const getMyself = catchAsync(async (req, res) => {
+  const { user } = req;
+
+  res.send(user);
+});
+
 const logout = catchAsync(async (req, res) => {
   const refreshToken = await tokenService.getToken(
     req.cookies.refreshToken,
@@ -71,4 +77,4 @@ const logout = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
-module.exports = { login, register, logout };
+module.exports = { login, register, logout, getMyself };

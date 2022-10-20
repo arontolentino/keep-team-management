@@ -1,23 +1,17 @@
 import { useSelector } from 'react-redux';
 import { withRouter } from 'next/router';
-import PageSpinner from './PageSpinner';
+import { PageSpinner } from '../components';
 
 const RestirctedRoute = ({ children, router }) => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const user = useSelector((state) => state.auth.user);
   const loading = useSelector((state) => state.auth.loading);
 
   if (loading) {
     return <PageSpinner />;
   }
 
-  if (isAuthenticated && user.isEmailVerified) {
-    router.push('/boards');
-    return <PageSpinner />;
-  }
-
-  if (isAuthenticated && !user.isEmailVerified) {
-    router.push('/verify-email');
+  if (isAuthenticated) {
+    router.push('/cards');
     return <PageSpinner />;
   }
 

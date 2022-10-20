@@ -1,7 +1,4 @@
-import PrivateRoute from "./PrivateRoute";\
-import RestrictedRoute from './RestrictedRoute'
+import PrivateRoute from './PrivateRoute';
+import RestrictedRoute from './RestrictedRoute';
 
-export {
-  PrivateRoute,
-  RestrictedRoute
-}
+export { PrivateRoute, RestrictedRoute };

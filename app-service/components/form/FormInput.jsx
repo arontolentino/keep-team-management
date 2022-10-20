@@ -1,4 +1,4 @@
-import { classNames } from '../utils';
+import { classNames } from '../../utils';
 
 export default function FormInput({ className, ...props }) {
   return (

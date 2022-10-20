@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get(
   '/',
-  auth(),
+  auth(['VIEW_USERS']),
   validate(userValidation.getUsers),
   userController.getUsers
 );

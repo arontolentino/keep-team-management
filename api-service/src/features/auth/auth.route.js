@@ -12,6 +12,7 @@ router.post(
   validate(authValidation.register),
   authController.register
 );
+router.get('/myself', auth(), authController.getMyself);
 router.get('/logout', auth(), authController.logout);
 
 module.exports = router;

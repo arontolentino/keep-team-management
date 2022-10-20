@@ -1,73 +1,118 @@
-export default function LoginForm() {
+import * as Yup from 'yup';
+import { Formik, Form } from 'formik';
+import Link from 'next/link';
+import { Button, FormikError, FormikField, Formlabel } from '../../components';
+import { useDispatch } from 'react-redux';
+import { registerAsync } from './auth.slice';
+
+export default function RegisterForm() {
+  const dispatch = useDispatch();
+
+  const initialValues = { name: '', businessName: '', email: '', password: '' };
+  const validationSchema = Yup.object().shape({
+    businessName: Yup.string().required('Business name is required'),
+    name: Yup.string().required('Your name is required'),
+    email: Yup.string()
+      .email('Please enter a valid email address')
+      .required('Email is required'),
+    password: Yup.string().required('Password is required'),
+  });
+
+  const onSubmit = async (values, actions) => {
+    await dispatch(await registerAsync(values));
+
+    actions.setSubmitting(false);
+  };
+
   return (
-    <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-      <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-        <form className="space-y-6" action="#" method="POST">
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Email address
-            </label>
-            <div className="mt-1">
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
-            <div className="mt-1">
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-              />
-              <label
-                htmlFor="remember-me"
-                className="ml-2 block text-sm text-gray-900"
-              >
-                Remember me
-              </label>
-            </div>
-          </div>
-
-          <div>
-            <button
-              type="submit"
-              className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            >
-              Sign in
-            </button>
-          </div>
-        </form>
+    <div className="mt-8 space-y-8 sm:mx-auto sm:w-full sm:max-w-md">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+          Register an account
+        </h2>
+        <p className="mt-2 text-center text-sm text-gray-600">
+          Or{' '}
+          <Link href="/login">
+            <a className="font-medium text-black hover:text-gray-500">
+              sign in to your account
+            </a>
+          </Link>
+        </p>
       </div>
+
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={onSubmit}
+      >
+        {({ isValid }) => {
+          return (
+            <Form className="space-y-6">
+              <div>
+                <Formlabel htmlFor="businessName">Business name</Formlabel>
+                <div className="mt-2">
+                  <FormikField
+                    id="businessName"
+                    name="businessName"
+                    type="text"
+                    autoComplete="businessName"
+                    required
+                  />
+                </div>
+                <FormikError name="businessName" />
+              </div>
+
+              <div>
+                <Formlabel htmlFor="name">Your name</Formlabel>
+                <div className="mt-2">
+                  <FormikField
+                    id="name"
+                    name="name"
+                    type="text"
+                    autoComplete="name"
+                    required
+                  />
+                </div>
+                <FormikError name="name" />
+              </div>
+
+              <div>
+                <Formlabel htmlFor="email">Email address</Formlabel>
+                <div className="mt-2">
+                  <FormikField
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                  />
+                </div>
+                <FormikError name="email" />
+              </div>
+
+              <div>
+                <Formlabel htmlFor="password">Password</Formlabel>
+                <div className="mt-2">
+                  <FormikField
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="current-password"
+                    required
+                  />
+                </div>
+                <FormikError name="password" />
+              </div>
+
+              <div>
+                <Button type="submit" className="w-full" disabled={!isValid}>
+                  Sign in
+                </Button>
+              </div>
+            </Form>
+          );
+        }}
+      </Formik>
     </div>
   );
 }

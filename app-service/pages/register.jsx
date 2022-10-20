@@ -1,14 +1,13 @@
-import { LoginForm } from '../features/auth';
+import { RegisterForm } from '../features/auth';
 import { Layout } from '../layouts';
 import { RestrictedRoute } from '../routes';
 
-export default function LoginPage() {
+export default function RegisterPage() {
   return (
     <RestrictedRoute>
       <Layout>
-        <LoginForm />
+        <RegisterForm />
       </Layout>
-      //{' '}
     </RestrictedRoute>
   );
 }
