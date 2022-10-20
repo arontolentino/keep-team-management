@@ -11,13 +11,7 @@ const Token = require('./token.model');
  * @param {string} [secret]
  * @returns {string}
  */
-const generateToken = (
-  userId,
-  expires,
-  type,
-  secret = process.env.JWT_SECRET
-) => {
-  console.log(process.env.JWT_SECRET);
+const generateToken = (userId, expires, type, secret = 'sampleSecret') => {
   const payload = {
     sub: userId,
     iat: moment().unix(),
@@ -97,4 +91,34 @@ const generateAuthTokens = async (user, transaction) => {
   };
 };
 
-module.exports = { generateToken, generateAuthTokens };
+/**
+ * Get token
+ * @param {string} token
+ * @param {string} type
+ * @param {object} trx
+ * @returns {Promise<Token>}
+ */
+const getToken = async (token, type, trx = null) => {
+  return await Token.query(trx).findOne({
+    token,
+    type,
+  });
+};
+
+/**
+ * Delete token by token id
+ * @param {uuid} tokenId
+ * @param {object} trx
+ * @returns {Promise<Token>}
+ */
+const deleteTokenById = async (tokenId, trx = null) => {
+  console.log(tokenId);
+  return await Token.query(trx).deleteById(tokenId);
+};
+
+module.exports = {
+  getToken,
+  generateToken,
+  generateAuthTokens,
+  deleteTokenById,
+};

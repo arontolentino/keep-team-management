@@ -25,4 +25,18 @@ const getUserByEmail = async (email, trx = null) => {
     .modify('defaultSelects');
 };
 
-module.exports = { createUser, getUserByEmail };
+/**
+ * Query for users
+ * @param {Object} reqQuery
+ * @param {Object} trx
+ * @returns {Promise<QueryResult>}
+ */
+const queryUsers = async (reqQuery, trx = null) => {
+  const users = await User.query(trx)
+    .withGraphFetched('[role(defaultSelects)]')
+    .page(reqQuery.page - 1, reqQuery.pageSize);
+
+  return users;
+};
+
+module.exports = { createUser, getUserByEmail, queryUsers };

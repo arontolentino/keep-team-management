@@ -1,4 +1,5 @@
 const { ApiError } = require('../../utils');
+const { Token } = require('../token');
 const { userService } = require('../user');
 
 /**

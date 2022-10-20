@@ -6,6 +6,7 @@ const { tokenService } = require('../token');
 const knex = require('../../config/knex');
 const httpStatus = require('http-status');
 const { ROLE_TYPES } = require('./auth.constants');
+const { TOKEN_TYPES } = require('../token/token.constants');
 
 const login = catchAsync(async (req, res) => {
   const { email, password, rememberMe } = req.body;
@@ -49,4 +50,25 @@ const register = catchAsync(async (req, res) => {
   });
 });
 
-module.exports = { login, register };
+const logout = catchAsync(async (req, res) => {
+  const refreshToken = await tokenService.getToken(
+    req.cookies.refreshToken,
+    TOKEN_TYPES.REFRESH
+  );
+
+  if (!refreshToken) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Not found');
+  }
+
+  console.log(refreshToken);
+  console.log(refreshToken.tokenId);
+
+  await tokenService.deleteTokenById(refreshToken.tokenId);
+
+  res.clearCookie('refreshToken');
+  res.clearCookie('accessToken');
+
+  res.status(httpStatus.NO_CONTENT).send();
+});
+
+module.exports = { login, register, logout };
