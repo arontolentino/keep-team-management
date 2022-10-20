@@ -1,6 +1,6 @@
 const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
 const { TOKEN_TYPES } = require('../features/token/token.constants');
-const { User } = require('../features/user');
+const { userService } = require('../features/user');
 
 const cookieExtractor = (req) => {
   let token = null;
@@ -23,7 +23,7 @@ const jwtVerify = async (payload, done) => {
       throw new Error('Invalid token type');
     }
 
-    const user = await User.query().findById(payload.sub);
+    const user = await userService.getUserById(payload.sub);
 
     if (!user) {
       return done(null, false);

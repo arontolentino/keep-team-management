@@ -12,13 +12,15 @@ const verifyCallback = (req, resolve, reject) => async (err, user, info) => {
 
   req.user = user;
 
-  // if (requiredRights.length) {
-  //   const userRights = roleRights.get(user.role);
-  //   const hasRequiredRights = requiredRights.every((requiredRight) => userRights.includes(requiredRight));
-  //   if (!hasRequiredRights && req.params.userId !== user.id) {
-  //     return reject(new ApiError(httpStatus.FORBIDDEN, 'Forbidden'));
-  //   }
-  // }
+  if (requiredPermissions.length) {
+    const userRights = roleRights.get(user.role);
+    const hasRequiredRights = requiredRights.every((requiredRight) =>
+      userRights.includes(requiredRight)
+    );
+    if (!hasRequiredRights && req.params.userId !== user.id) {
+      return reject(new ApiError(httpStatus.FORBIDDEN, 'Forbidden'));
+    }
+  }
 
   resolve();
 };
@@ -28,13 +30,13 @@ const verifyCallback = (req, resolve, reject) => async (err, user, info) => {
  * @param {boolean} optional
  */
 const auth =
-  (...requiredRights) =>
+  (...requiredPermissions) =>
   async (req, res, next) => {
     return new Promise((resolve, reject) => {
       passport.authenticate(
         'jwt',
         { session: false },
-        verifyCallback(req, resolve, reject, requiredRights)
+        verifyCallback(req, resolve, reject, requiredPermissions)
       )(req, res, next);
     })
       .then(() => next())
