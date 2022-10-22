@@ -12,6 +12,17 @@ router.get(
   validate(userValidation.getUsers),
   userController.getUsers
 );
-router.post('/', userController.inviteUser);
+router.get(
+  '/invited',
+  auth(['VIEW_USERS']),
+  // validate(userValidation.getUsers),
+  userController.getUsers
+);
+router.post(
+  '/',
+  auth(['ADD_USERS']),
+  validate(userValidation.inviteUser),
+  userController.inviteUser
+);
 
 module.exports = router;

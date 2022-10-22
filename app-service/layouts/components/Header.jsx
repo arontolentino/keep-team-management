@@ -6,6 +6,7 @@ import {
   selectUser,
 } from '../../features/auth/auth.slice';
 import { hasPermissions } from '../../utils';
+import { Button } from '../../components';
 
 export default function Example() {
   const dispatch = useDispatch();
@@ -28,7 +29,7 @@ export default function Example() {
 
   return (
     <header>
-      <nav className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8" aria-label="Top">
+      <nav className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8" aria-label="Top">
         <div className="flex w-full items-center justify-between border-b border-gray-500 py-6 lg:border-none">
           <div className="flex items-center">
             <a href="#">
@@ -58,12 +59,12 @@ export default function Example() {
           <div className="ml-10 space-x-4">
             {isAuthenticated ? (
               <>
-                <button
-                  className="inline-block rounded-md border border-transparent bg-black py-2 px-4 text-base text-white font-medium  hover:bg-opacity-75"
+                <Button
+                  color="secondary"
                   onClick={async () => await dispatch(await logoutAsync())}
                 >
                   Sign out
-                </button>
+                </Button>
               </>
             ) : (
               <>

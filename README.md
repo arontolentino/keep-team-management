@@ -13,6 +13,14 @@
 - Docker + Doker Compose
 - Nginx
 
+## Highlights
+
+- Fully working authentication with access/refresh tokens, JWT, and cookies
+- Database migration and seeding
+- API endpoint validations
+- API endpoint restrictions based on required permissions
+- Page and component restriction based on required permissions
+
 ## User Stories
 
 ### Authentication
@@ -24,15 +32,18 @@
 ### Team Management
 
 - [ ] As an admin, I want to see a list of team members.
+- [ ] As an admin, I want to see a list of invites.
 - [ ] As an admin, I want to invite new admins to the team.
 - [ ] As an admin, I want to invite new employees to the team.
 
 ### Card Management
 
 - [ ] As an admin, I want to create a card for anyone on the team.
-- [ ] As an employee, I want to request a card to be issued.
 - [ ] As an admin, I want to approve a requested card.
 - [ ] As an admin, I want to decline a requested card.
+- [ ] As an admin, I want to see all cards.
+- [ ] As an employee, I want to see my own cards.
+- [ ] As an employee, I want to request a card to be issued.
 
 ## DB Schema
 
@@ -96,7 +107,7 @@
 ### Authentication
 
 - `POST v1/auth/login`
-  - Description: 
+  - Description:
     - Login with email and password
   - Request body:
     ```
@@ -106,7 +117,7 @@
     }
     ```
 - `POST v1/auth/register`
-  - Description: 
+  - Description:
     - Register with name, email, password, and business name.
   - Query params:
     - `inviteId`
@@ -126,13 +137,13 @@
 ### Users
 
 - `GET /v1/users`
-  - Description: 
+  - Description:
     - Gets all users from a business
   - Query params:
     - `page`
     - `pageSize`
 - `POST /v1/users`
-  - Description: 
+  - Description:
     - Invite a user to a business
 - `PUT /v1/users/:userId`
 - `DELETE /v1/users/:userId`

@@ -76,6 +76,6 @@ export const logoutAsync = () => async (dispatch) => {
 
 export const selectUser = (state) => state.auth.user;
 export const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
-export const selecteIsLoading = (state) => state.auth.isLoading;
+export const selectIsLoading = (state) => state.auth.loading;
 
 export default authSlice.reducer;

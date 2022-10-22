@@ -7,6 +7,7 @@ exports.up = async (knex) => {
           .primary()
           .defaultTo(knex.raw('uuid_generate_v4()'));
         table.uuid('businessId').notNullable();
+        table.integer('roleId').notNullable();
         table.string('name').notNullable();
         table.string('email').unique().notNullable();
         table.timestamp('createdAt').notNullable().defaultTo(knex.raw('now()'));
@@ -18,6 +19,12 @@ exports.up = async (knex) => {
           .inTable('businesses')
           .onUpdate('CASCADE')
           .onDelete('CASCADE');
+
+        table
+          .foreign('roleId')
+          .references('roleId')
+          .inTable('roles')
+          .onUpdate('CASCADE');
       });
 
       await trx.raw(`

@@ -40,13 +40,27 @@ const getUserByEmail = async (email, trx = null) => {
 
 /**
  * Query for users
- * @param {Object} reqQuery
- * @param {Object} trx
+ * @param {object} reqQuery
+ * @param {uuid} businessId
+ * @param {object} trx
  * @returns {Promise<QueryResult>}
  */
-const queryUsers = async (reqQuery, trx = null) => {
+const queryUsers = async (reqQuery, businessId, trx = null) => {
   const users = await User.query(trx)
+    .where('businessId', businessId)
     .withGraphFetched('[role(defaultSelects)]')
+    .modify(function (builder) {
+      if (reqQuery.searchTerm) {
+        builder.where('businessId', businessId).andWhere((builder) => {
+          builder
+            .where('name', 'ilike', `%${reqQuery.searchTerm}%`)
+            .orWhere('email', 'ilike', `%${reqQuery.searchTerm}%`);
+        });
+      }
+
+      if (reqQuery.sortBy && reqQuery.sortDirection)
+        builder.orderBy(reqQuery.sortBy, reqQuery.sortDirection);
+    })
     .page(reqQuery.page - 1, reqQuery.pageSize);
 
   return users;

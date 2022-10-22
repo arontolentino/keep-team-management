@@ -14,6 +14,7 @@ class Invite extends Model {
 
   static get relationMappings() {
     const { Business } = require('../business');
+    const { Role } = require('../role');
 
     return {
       business: {
@@ -22,6 +23,14 @@ class Invite extends Model {
         join: {
           from: 'invites.businessId',
           to: 'businessses.businessId',
+        },
+      },
+      role: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Role,
+        join: {
+          from: 'invites.roleId',
+          to: 'roles.roleId',
         },
       },
     };

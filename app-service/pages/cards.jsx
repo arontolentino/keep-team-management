@@ -1,10 +1,13 @@
+import { CardsList } from '../features/cards';
 import { Layout } from '../layouts';
 import { PrivateRoute } from '../routes';
 
 export default function CardsPage() {
   return (
     <PrivateRoute>
-      <Layout>Cards</Layout>
+      <Layout>
+        <CardsList />
+      </Layout>
     </PrivateRoute>
   );
 }

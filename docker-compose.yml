@@ -45,3 +45,5 @@ services:
       - app-service
       - api-service
       - postgres-service
+    logging:
+      driver: none

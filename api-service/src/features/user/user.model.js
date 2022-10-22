@@ -18,7 +18,7 @@ class User extends Model {
   static get modifiers() {
     return {
       defaultSelects(builder) {
-        builder.select(['userId', 'password', 'name', 'email']);
+        builder.select(['userId', 'businessId', 'password', 'name', 'email']);
       },
     };
   }

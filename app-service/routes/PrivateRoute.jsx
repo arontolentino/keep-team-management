@@ -1,17 +1,24 @@
 import { useSelector } from 'react-redux';
-import { withRouter } from 'next/router';
+
+import { useRouter } from 'next/router';
 import { PageSpinner } from '../components';
 import {
-  selecteIsLoading,
+  selectIsLoading,
   selectIsAuthenticated,
   selectUser,
 } from '../features/auth/auth.slice';
 import { hasPermissions } from '../utils';
 
-const PrivateRoute = ({ children, router, requiredPermissions }) => {
+const PrivateRoute = ({ children, requiredPermissions }) => {
+  const router = useRouter();
+
   const isAuthenticated = useSelector(selectIsAuthenticated);
-  const loading = useSelector(selecteIsLoading);
+  const loading = useSelector(selectIsLoading);
   const user = useSelector(selectUser);
+
+  const isPermitted = requiredPermissions
+    ? hasPermissions(user, requiredPermissions)
+    : true;
 
   if (loading) {
     return <PageSpinner />;
@@ -22,11 +29,7 @@ const PrivateRoute = ({ children, router, requiredPermissions }) => {
     return <PageSpinner />;
   }
 
-  if (
-    !loading &&
-    isAuthenticated &&
-    hasPermissions(user, requiredPermissions)
-  ) {
+  if (!loading && isAuthenticated && isPermitted) {
     return children;
   } else {
     router.push('/cards');
@@ -34,4 +37,4 @@ const PrivateRoute = ({ children, router, requiredPermissions }) => {
   }
 };
 
-export default withRouter(PrivateRoute);
+export default PrivateRoute;
