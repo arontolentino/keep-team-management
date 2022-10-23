@@ -12,7 +12,7 @@ const createInvite = async (reqBody, businessId, trx = null) => {
   const newInvite = {
     businessId,
     name: reqBody.name,
-    email: reqBody.name,
+    email: reqBody.email,
     roleId: ROLE_TYPES[reqBody.role],
   };
 
@@ -21,6 +21,19 @@ const createInvite = async (reqBody, businessId, trx = null) => {
     .withGraphFetched('[role(defaultSelects)]');
 
   return invite;
+};
+
+/**
+ * @dec Get invite by id
+ * @param {uuid} inviteId
+ * @param {object} trx
+ * @returns {Promise<User>}
+ */
+const getInviteById = async (inviteId, trx = null) => {
+  return Invite.query(trx)
+    .findById(inviteId)
+    .modify('defaultSelects')
+    .withGraphFetched('[role(defaultSelects)]');
 };
 
 /**
@@ -33,6 +46,7 @@ const createInvite = async (reqBody, businessId, trx = null) => {
 const queryInvites = async (reqQuery, businessId, trx = null) => {
   const invites = await Invite.query(trx)
     .where('businessId', businessId)
+    .modify('defaultSelects')
     .withGraphFetched('[role(defaultSelects)]')
     .modify(function (builder) {
       if (reqQuery.searchTerm) {
@@ -51,4 +65,19 @@ const queryInvites = async (reqQuery, businessId, trx = null) => {
   return invites;
 };
 
-module.exports = { createInvite };
+/**
+ * Delete invite by it
+ * @param {string} inviteId
+ * @param {object} trx
+ * @returns {Promise<Post>}
+ */
+const deleteInviteById = async (inviteId, trx) => {
+  return await Invite.query(trx).deleteById(inviteId);
+};
+
+module.exports = {
+  createInvite,
+  queryInvites,
+  getInviteById,
+  deleteInviteById,
+};

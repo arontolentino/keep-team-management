@@ -12,6 +12,14 @@ class Invite extends Model {
     return 'inviteId';
   }
 
+  static get modifiers() {
+    return {
+      defaultSelects(builder) {
+        builder.select(['inviteId', 'businessId', 'name', 'email']);
+      },
+    };
+  }
+
   static get relationMappings() {
     const { Business } = require('../business');
     const { Role } = require('../role');

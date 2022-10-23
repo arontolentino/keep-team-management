@@ -12,6 +12,11 @@ router.post(
   validate(authValidation.register),
   authController.register
 );
+router.post(
+  '/activate/:inviteId',
+  validate(authValidation.activate),
+  authController.activate
+);
 router.get('/myself', auth(), authController.getMyself);
 router.get('/logout', auth(), authController.logout);
 

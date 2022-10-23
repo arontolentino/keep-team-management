@@ -27,4 +27,16 @@ const register = yup.object({
   }),
 });
 
-module.exports = { login, register };
+const activate = yup.object({
+  params: yup.object({
+    inviteId: yup
+      .string()
+      .uuid('Invalid invite id format')
+      .required('Invite id is required'),
+  }),
+  body: yup.object({
+    password: yup.string().required('Password is required'),
+  }),
+});
+
+module.exports = { login, register, activate };

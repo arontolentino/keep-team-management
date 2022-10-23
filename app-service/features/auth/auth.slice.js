@@ -63,6 +63,31 @@ export const registerAsync = (formData) => async (dispatch) => {
   }
 };
 
+export const activateAsync = (formData, inviteId) => async (dispatch) => {
+  try {
+    const res = await api().post(`/v1/auth/activate/${inviteId}`, formData);
+
+    await dispatch(setIsAuthenticated(true));
+    await dispatch(setUser(res.data.data));
+  } catch (error) {
+    await dispatch(setAlert('error', error.response.data.message));
+
+    throw error;
+  }
+};
+
+export const getInviteAsync = async (inviteId) => async (dispatch) => {
+  try {
+    const res = await api().get(`/v1/invites/${inviteId}`);
+
+    return res.data.data;
+  } catch (error) {
+    await dispatch(setAlert('error', error.response.data.message));
+
+    throw error;
+  }
+};
+
 export const logoutAsync = () => async (dispatch) => {
   try {
     await api().get('/v1/auth/logout');

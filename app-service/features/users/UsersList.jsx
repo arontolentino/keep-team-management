@@ -1,5 +1,3 @@
-import { CalendarIcon, UserIcon } from '@heroicons/react/outline';
-import moment from 'moment';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,30 +7,36 @@ import {
   FormSelect,
   ListLoading,
   NoData,
+  Tabs,
 } from '../../components';
-import { SORT_BY_OPTIONS, SORT_DIRECTION_OPTIONS } from './users.constants';
+import UserItem from './UserItem';
 import {
+  ACTIVE_SORT_BY_OPTIONS,
+  SORT_DIRECTION_OPTIONS,
+  USER_TYPES,
+} from './users.constants';
+import {
+  getInvitesAsync,
   getUsersAsync,
-  selectIsUsersLoading,
+  selectInvites,
   selectUsers,
 } from './users.slice';
-import UsersTab from './UsersTab';
 
 export default function UsersList() {
+  const [activeTab, setActiveTab] = useState('ACTIVE');
   const dispatch = useDispatch();
 
-  const [loading, setLoading] = useState(true);
+  const users = useSelector(selectUsers);
+  const invites = useSelector(selectInvites);
+
   const [debounceTimer, setDebounceTimer] = useState(null);
   const [params, setParams] = useState({
     page: 1,
     pageSize: 10,
     searchTerm: '',
-    sortBy: SORT_BY_OPTIONS.createdAt.value,
+    sortBy: ACTIVE_SORT_BY_OPTIONS.createdAt.value,
     sortDirection: SORT_DIRECTION_OPTIONS.desc.value,
   });
-
-  const users = useSelector(selectUsers);
-  const isUsersLoading = useSelector(selectIsUsersLoading);
 
   useEffect(() => {
     (async () => {
@@ -41,14 +45,18 @@ export default function UsersList() {
       }
 
       const timer = setTimeout(async () => {
-        await dispatch(await getUsersAsync(params));
+        if (activeTab === USER_TYPES.ACTIVE || activeTab === 'ACTIVE') {
+          await dispatch(await getUsersAsync(params));
+        } else {
+          await dispatch(await getInvitesAsync(params));
+        }
 
         clearTimeout(debounceTimer);
       }, 500);
 
       setDebounceTimer(timer);
     })();
-  }, [params]);
+  }, [params, activeTab]);
 
   const onInputChange = (e) => {
     const value = e.target.value;
@@ -79,7 +87,11 @@ export default function UsersList() {
         </Link>
       </div>
 
-      <UsersTab />
+      <Tabs
+        tabs={Object.values(USER_TYPES)}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+      />
 
       <div className="mt-6 flex justify-between items-center">
         <FormInput
@@ -87,16 +99,16 @@ export default function UsersList() {
           className="w-64"
           type="text"
           placeholder="Search by name or email"
-          onChange={onInputChange}
+          onChange={(e) => onInputChange(e, setParams)}
         />
         <div className="flex space-x-4">
           <div className="flex items-center space-x-4">
             <p className="whitespace-nowrap text-sm">Sort by:</p>
             <FormSelect
               name="sortBy"
-              value={JSON.stringify(SORT_BY_OPTIONS[params.sortBy])}
-              options={Object.values(SORT_BY_OPTIONS)}
-              onChange={onSelectChange}
+              value={JSON.stringify(ACTIVE_SORT_BY_OPTIONS[params.sortBy])}
+              options={Object.values(ACTIVE_SORT_BY_OPTIONS)}
+              onChange={(e) => onSelectChange(e, setParams)}
             />
           </div>
 
@@ -115,51 +127,30 @@ export default function UsersList() {
       </div>
 
       <div className="mt-4 overflow-hidden bg-white">
-        <ul role="list" className="divide-y divide-gray-200">
-          {isUsersLoading || !users ? (
-            <ListLoading title="Loading users" />
-          ) : users && (!users.results || users.results.length === 0) ? (
-            <NoData title="No users found" />
-          ) : (
-            users.results.map((user) => (
-              <li key={user.id}>
-                <a href="#" className="block hover:bg-gray-50">
-                  <div className="px-4 py-4 sm:px-6">
-                    <div className="flex items-center justify-between">
-                      <p className="truncate font-medium text-black">
-                        {user.name}
-                      </p>
-                      <div className="ml-2 flex flex-shrink-0">
-                        <p className="inline-flex capitalize rounded-full bg-gray-200 px-2 text-xs font-semibold leading-5 text-black">
-                          {/* {position.type} */}
-                          {user.role.name}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="mt-2 sm:flex sm:justify-between">
-                      <div className="sm:flex">
-                        <p className="flex items-center text-sm text-gray-500">
-                          <UserIcon
-                            className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
-                            aria-hidden="true"
-                          />
-                          {user.email}
-                        </p>
-                      </div>
-                      <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                        <CalendarIcon
-                          className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
-                          aria-hidden="true"
-                        />
-                        <p>Joined on {moment(user.createdAt).format('LL')}</p>
-                      </div>
-                    </div>
-                  </div>
-                </a>
-              </li>
-            ))
-          )}
-        </ul>
+        {activeTab === USER_TYPES.ACTIVE || activeTab === 'ACTIVE' ? (
+          <ul role="list" className="divide-y divide-gray-200">
+            {!users ? (
+              <ListLoading title="Loading users" />
+            ) : users && (!users.results || users.results.length === 0) ? (
+              <NoData title="No users found" />
+            ) : (
+              users.results.map((user) => <UserItem user={user} />)
+            )}
+          </ul>
+        ) : (
+          <ul role="list" className="divide-y divide-gray-200">
+            {!invites ? (
+              <ListLoading title="Loading invites" />
+            ) : invites &&
+              (!invites.results || invites.results.length === 0) ? (
+              <NoData title="No invites found" />
+            ) : (
+              invites.results.map((user) => (
+                <UserItem user={user} type={USER_TYPES.INVITED} />
+              ))
+            )}
+          </ul>
+        )}
       </div>
     </div>
   );

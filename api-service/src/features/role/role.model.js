@@ -15,7 +15,7 @@ class Role extends Model {
   static get modifiers() {
     return {
       defaultSelects(builder) {
-        builder.select(['roles.name']);
+        builder.select(['roles.roleId', 'roles.name']);
       },
     };
   }

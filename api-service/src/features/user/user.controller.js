@@ -8,15 +8,6 @@ const getUsers = catchAsync(async (req, res) => {
   res.send({ success: true, data: users });
 });
 
-const getInvites = catchAsync(async (req, res) => {
-  const invites = await inviteService.queryInvites(
-    req.query,
-    req.user.businessId
-  );
-
-  res.send({ success: true, data: invites });
-});
-
 const inviteUser = catchAsync(async (req, res) => {
   const user = await userService.getUserByEmail(req.body.email);
 
@@ -32,4 +23,4 @@ const inviteUser = catchAsync(async (req, res) => {
   res.send({ success: true, data: invite });
 });
 
-module.exports = { getUsers, inviteUser, getInvites };
+module.exports = { getUsers, inviteUser };

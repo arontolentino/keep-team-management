@@ -12,12 +12,7 @@ router.get(
   validate(userValidation.getUsers),
   userController.getUsers
 );
-router.get(
-  '/invited',
-  auth(['VIEW_USERS']),
-  // validate(userValidation.getUsers),
-  userController.getUsers
-);
+
 router.post(
   '/',
   auth(['ADD_USERS']),

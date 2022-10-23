@@ -14,6 +14,7 @@ import PageSpinner from './PageSpinner';
 import Spinner from './Spinner';
 import NoData from './NoData';
 import ListLoading from './ListLoading';
+import Tabs from './Tabs';
 
 export {
   PageSpinner,
@@ -27,4 +28,5 @@ export {
   FormSelect,
   NoData,
   ListLoading,
+  Tabs,
 };

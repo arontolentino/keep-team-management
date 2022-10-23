@@ -15,8 +15,7 @@ import { ROLE_TYPES } from './users.constants';
 import { inviteUserAsync } from './users.slice';
 
 function SuccessMessage({ invite, setInvite }) {
-  const inviteLink = `${process.env.NEXT_PUBLIC_APP_BASE_URL}/register?inviteId=
-  ${invite.inviteId}`;
+  const inviteLink = `${process.env.NEXT_PUBLIC_APP_BASE_URL}/register?inviteId=${invite.inviteId}`;
 
   return (
     <>

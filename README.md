@@ -25,16 +25,16 @@
 
 ### Authentication
 
-- [ ] As a an admin, I want to register an account for my business with my business name, email mand password.
-- [ ] As a user, I want to login with my email and password.
-- [ ] As an user, I want to set my password when I activate my account via an invitation.
+- [x] As a an admin, I want to register an account for my business with my business name, email mand password.
+- [x] As a user, I want to login with my email and password.
+- [] As an user, I want to set my password when I activate my account via an invitation.
 
 ### Team Management
 
-- [ ] As an admin, I want to see a list of team members.
-- [ ] As an admin, I want to see a list of invites.
-- [ ] As an admin, I want to invite new admins to the team.
-- [ ] As an admin, I want to invite new employees to the team.
+- [x] As an admin, I want to see a list of team members.
+- [x] As an admin, I want to see a list of invites.
+- [x] As an admin, I want to invite new admins to the team.
+- [x] As an admin, I want to invite new employees to the team.
 
 ### Card Management
 

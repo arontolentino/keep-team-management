@@ -1,15 +1,57 @@
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 import Link from 'next/link';
-import { Button, FormikError, FormikField, Formlabel } from '../../components';
+import {
+  Button,
+  FormikError,
+  FormikField,
+  Formlabel,
+  PageSpinner,
+} from '../../components';
 import { useDispatch } from 'react-redux';
-import { registerAsync } from './auth.slice';
+import { activateAsync, getInviteAsync, registerAsync } from './auth.slice';
+import { useEffect, useState } from 'react';
 
-export default function RegisterForm() {
+export default function RegisterForm({ inviteId }) {
   const dispatch = useDispatch();
 
-  const initialValues = { name: '', businessName: '', email: '', password: '' };
-  const validationSchema = Yup.object().shape({
+  const [initialValues, setInitialValues] = useState({
+    name: '',
+    businessName: '',
+    email: '',
+    password: '',
+  });
+  const [invite, setInvite] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      if (inviteId) {
+        try {
+          const fetchedInvite = await dispatch(await getInviteAsync(inviteId));
+
+          setInvite(fetchedInvite);
+        } catch (error) {
+          setInvite(null);
+          setLoading(false);
+        }
+      }
+    })();
+  }, [inviteId]);
+
+  useEffect(() => {
+    if (invite) {
+      setInitialValues({
+        name: invite.name,
+        email: invite.email,
+        password: '',
+      });
+
+      setLoading(false);
+    }
+  }, [invite]);
+
+  const registerValidationSchema = Yup.object().shape({
     businessName: Yup.string().required('Business name is required'),
     name: Yup.string().required('Your name is required'),
     email: Yup.string()
@@ -18,49 +60,83 @@ export default function RegisterForm() {
     password: Yup.string().required('Password is required'),
   });
 
-  const onSubmit = async (values, actions) => {
+  const activateValidationSchema = Yup.object().shape({
+    name: Yup.string().required('Your name is required'),
+    email: Yup.string()
+      .email('Please enter a valid email address')
+      .required('Email is required'),
+    password: Yup.string().required('Password is required'),
+  });
+
+  const onRegister = async (values, actions) => {
     await dispatch(await registerAsync(values));
 
     actions.setSubmitting(false);
   };
 
+  const onActivate = async (values, actions) => {
+    await dispatch(await activateAsync(values, inviteId));
+
+    actions.setSubmitting(false);
+  };
+
+  if (loading) {
+    return <PageSpinner />;
+  }
+
+  const isActivating = !loading && inviteId && invite;
+
   return (
     <div className="mt-8 space-y-8 sm:mx-auto sm:w-full sm:max-w-md">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-          Register an account
-        </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          Or{' '}
-          <Link href="/login">
-            <a className="font-medium text-black hover:text-gray-500">
-              sign in to your account
-            </a>
-          </Link>
-        </p>
+        {isActivating ? (
+          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+            Activate your account
+          </h2>
+        ) : (
+          <>
+            <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+              Register an account
+            </h2>
+            <p className="mt-2 text-center text-sm text-gray-600">
+              Or{' '}
+              <Link href="/login">
+                <a className="font-medium text-black hover:text-gray-500">
+                  sign in to your account
+                </a>
+              </Link>
+            </p>
+          </>
+        )}
       </div>
 
       <Formik
         initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={onSubmit}
+        validationSchema={
+          invite ? activateValidationSchema : registerValidationSchema
+        }
+        onSubmit={invite ? onActivate : onRegister}
+        enableReinitialize
       >
         {({ isValid }) => {
           return (
             <Form className="space-y-6">
-              <div>
-                <Formlabel htmlFor="businessName">Business name</Formlabel>
-                <div className="mt-2">
-                  <FormikField
-                    id="businessName"
-                    name="businessName"
-                    type="text"
-                    autoComplete="businessName"
-                    required
-                  />
+              {!isActivating && (
+                <div>
+                  <Formlabel htmlFor="businessName">Business name</Formlabel>
+                  <div className="mt-2">
+                    <FormikField
+                      id="businessName"
+                      name="businessName"
+                      type="text"
+                      autoComplete="businessName"
+                      disabled={invite}
+                      required
+                    />
+                  </div>
+                  <FormikError name="businessName" />
                 </div>
-                <FormikError name="businessName" />
-              </div>
+              )}
 
               <div>
                 <Formlabel htmlFor="name">Your name</Formlabel>
@@ -70,6 +146,7 @@ export default function RegisterForm() {
                     name="name"
                     type="text"
                     autoComplete="name"
+                    disabled={invite}
                     required
                   />
                 </div>
@@ -84,6 +161,7 @@ export default function RegisterForm() {
                     name="email"
                     type="email"
                     autoComplete="email"
+                    disabled={invite}
                     required
                   />
                 </div>
@@ -106,7 +184,7 @@ export default function RegisterForm() {
 
               <div>
                 <Button type="submit" className="w-full" disabled={!isValid}>
-                  Sign in
+                  {isActivating ? 'Activate' : 'Register'}
                 </Button>
               </div>
             </Form>
