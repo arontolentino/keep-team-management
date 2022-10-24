@@ -53,7 +53,6 @@ const register = catchAsync(async (req, res) => {
 
 const activate = catchAsync(async (req, res) => {
   await knex.transaction(async (trx) => {
-    console.log(req.params);
     let invite = await inviteService.getInviteById(req.params.inviteId, trx);
 
     if (!invite) {

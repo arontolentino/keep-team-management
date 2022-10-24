@@ -7,7 +7,9 @@ const User = require('./user.model');
  * @returns {Promise<User>}
  */
 const createUser = async (reqBody, trx = null) => {
-  const user = await User.query(trx).insert(reqBody);
+  let user = await User.query(trx).insert(reqBody).returning('*');
+
+  user = await getUserById(user.userId, trx);
 
   return user;
 };

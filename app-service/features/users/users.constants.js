@@ -1,4 +1,4 @@
-export const INVITED_ACTIVE_SORT_BY_OPTIONS = {
+export const INVITED_SORT_BY_OPTIONS = {
   name: { label: 'Name', value: 'name' },
   email: { label: 'Email', value: 'email' },
   createdAt: { label: 'Invite Date', value: 'createdAt' },

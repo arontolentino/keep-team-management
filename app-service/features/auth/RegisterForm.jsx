@@ -35,6 +35,8 @@ export default function RegisterForm({ inviteId }) {
           setInvite(null);
           setLoading(false);
         }
+      } else {
+        setLoading(false);
       }
     })();
   }, [inviteId]);

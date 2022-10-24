@@ -12,6 +12,7 @@ import {
 import UserItem from './UserItem';
 import {
   ACTIVE_SORT_BY_OPTIONS,
+  INVITED_SORT_BY_OPTIONS,
   SORT_DIRECTION_OPTIONS,
   USER_TYPES,
 } from './users.constants';
@@ -104,12 +105,22 @@ export default function UsersList() {
         <div className="flex space-x-4">
           <div className="flex items-center space-x-4">
             <p className="whitespace-nowrap text-sm">Sort by:</p>
-            <FormSelect
-              name="sortBy"
-              value={JSON.stringify(ACTIVE_SORT_BY_OPTIONS[params.sortBy])}
-              options={Object.values(ACTIVE_SORT_BY_OPTIONS)}
-              onChange={(e) => onSelectChange(e, setParams)}
-            />
+
+            {activeTab === USER_TYPES.ACTIVE || activeTab === 'ACTIVE' ? (
+              <FormSelect
+                name="sortBy"
+                value={JSON.stringify(ACTIVE_SORT_BY_OPTIONS[params.sortBy])}
+                options={Object.values(ACTIVE_SORT_BY_OPTIONS)}
+                onChange={(e) => onSelectChange(e, setParams)}
+              />
+            ) : (
+              <FormSelect
+                name="sortBy"
+                value={JSON.stringify(INVITED_SORT_BY_OPTIONS[params.sortBy])}
+                options={Object.values(INVITED_SORT_BY_OPTIONS)}
+                onChange={(e) => onSelectChange(e, setParams)}
+              />
+            )}
           </div>
 
           <div className="flex items-center space-x-4">

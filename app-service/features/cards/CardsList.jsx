@@ -18,7 +18,7 @@ export default function CardsList() {
       <div className="flex justify-between">
         <h1 className="text-2xl font-bold">Cards</h1>
 
-        {hasPermissions(user, ['CREATE_CARD']) ? (
+        {hasPermissions(user, ['ADD_CARD']) ? (
           <Button>Create Card</Button>
         ) : (
           <Button>Request Card</Button>
