@@ -130,6 +130,17 @@
       "businessName: "John Doe Ventures Inc."
     }
     ```
+    
+- `POST /v1/auth/activate/:inviteId
+  - Description:
+    - Activates invited user account
+  - Request body:
+    ```
+    {
+      "password": "password@1234",
+    }
+    ```
+  
 - `GET v1/auth/logout`
   - Description:
     - Log out by clearing cookies and delete refresh token from database
@@ -140,19 +151,40 @@
   - Description:
     - Gets all users from a business
   - Query params:
+    - `searchTerm`
+    - `soryBy`
+    - `sortDirection`
     - `page`
     - `pageSize`
-- `POST /v1/users`
-  - Description:
-    - Invite a user to a business
 - `PUT /v1/users/:userId`
+  - TBD
 - `DELETE /v1/users/:userId`
+  - TBD
+
+### Invites
+
+- `GET /v1/invites`
+  - Description:
+    - Gets all user invitations
+  - Query params:
+    - `searchTerm`
+    - `soryBy`
+    - `sortDirection`
+    - `page`
+    - `pageSize`
+- `GET /v1/invites:/inviteId
+  - Description:
+    - Gets a specific user invitation
 
 ### Cards
 
-- `GET /v1/cards?status={status}`
+- `GET /v1/cards`
+  - TBD
 - `POST /v1/cards`
-- `POST /v1/cards/request`
+  - TBD
 - `GET /v1/cards/:cardId/approve`
+  - TBD
 - `GET /v1/cards/:cardId/decline`
+  - TBD
 - `DELETE /v1/card:cardId`
+  - TBD
