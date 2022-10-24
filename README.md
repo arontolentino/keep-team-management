@@ -131,7 +131,7 @@
     }
     ```
     
-- `POST /v1/auth/activate/:inviteId
+- `POST /v1/auth/activate/:inviteId`
   - Description:
     - Activates invited user account
   - Request body:
