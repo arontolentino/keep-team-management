@@ -27,7 +27,7 @@
 
 - [x] As a an admin, I want to register an account for my business with my business name, email mand password.
 - [x] As a user, I want to login with my email and password.
-- [] As an user, I want to set my password when I activate my account via an invitation.
+- [ ] As an user, I want to set my password when I activate my account via an invitation.
 
 ### Team Management
 
